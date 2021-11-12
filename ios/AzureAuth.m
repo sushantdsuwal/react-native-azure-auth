@@ -13,6 +13,8 @@
 #endif
 
 #define ERROR_CANCELLED @{@"error": @"aa.session.user_cancelled",@"error_description": @"User cancelled the Auth"}
+#define ERROR_CANCELLED1 @{@"error": @"aa.session.user_cancelled1",@"error_description": @"User cancelled the Auth1"}
+#define ERROR_CANCELLED2 @{@"error": @"aa.session.user_cancelled2",@"error_description": @"User cancelled the Auth2"}
 #define ERROR_FAILED_TO_LOAD @{@"error": @"aa.session.failed_load",@"error_description": @"Failed to load url"}
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
@@ -55,7 +57,7 @@ RCT_EXPORT_METHOD(showUrl:(NSString *)urlString
         [self presentSafariWithURL:[NSURL URLWithString:urlString]];
         self.sessionCallback = callback;
         self.closeOnLoad = closeOnLoad;
-    }    
+    }
 }
 
 RCT_EXPORT_METHOD(oauthParameters:(RCTResponseSenderBlock)callback) {
@@ -102,7 +104,7 @@ UIBackgroundTaskIdentifier taskId;
         taskId = [UIApplication.sharedApplication beginBackgroundTaskWithExpirationHandler:^{
             [UIApplication.sharedApplication endBackgroundTask:taskId];
             taskId = UIBackgroundTaskInvalid;
-        }];        
+        }];
         ASWebAuthenticationSession* authenticationSession = [[ASWebAuthenticationSession alloc]
                                       initWithURL:url callbackURLScheme:callbackURLScheme
                                       completionHandler:^(NSURL * _Nullable callbackURL,
@@ -117,7 +119,7 @@ UIBackgroundTaskIdentifier taskId;
                                           }
                                           self.authenticationSession = nil;
                                           [UIApplication.sharedApplication endBackgroundTask:taskId];
-                                          taskId = UIBackgroundTaskInvalid;                                          
+                                          taskId = UIBackgroundTaskInvalid;
                                       }];
         #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
         if (@available(iOS 13.0, *)) {
@@ -131,14 +133,14 @@ UIBackgroundTaskIdentifier taskId;
 	    taskId = [UIApplication.sharedApplication beginBackgroundTaskWithExpirationHandler:^{
             [UIApplication.sharedApplication endBackgroundTask:taskId];
             taskId = UIBackgroundTaskInvalid;
-        }];        
+        }];
         self.authenticationSession = [[SFAuthenticationSession alloc]
                                       initWithURL:url callbackURLScheme:callbackURLScheme
                                       completionHandler:^(NSURL * _Nullable callbackURL,
                                                           NSError * _Nullable error) {
                                           if ([[error domain] isEqualToString:SFAuthenticationErrorDomain] &&
                                               [error code] == SFAuthenticationErrorCanceledLogin) {
-                                              callback(@[ERROR_CANCELLED, [NSNull null]]);
+                                              callback(@[ERROR_CANCELLED1, [NSNull null]]);
                                           } else if(error) {
                                               callback(@[error, [NSNull null]]);
                                           } else if(callbackURL) {
@@ -146,7 +148,7 @@ UIBackgroundTaskIdentifier taskId;
                                           }
                                           self.authenticationSession = nil;
                                           [UIApplication.sharedApplication endBackgroundTask:taskId];
-                                          taskId = UIBackgroundTaskInvalid;                                          
+                                          taskId = UIBackgroundTaskInvalid;
                                       }];
         [(SFAuthenticationSession*) self.authenticationSession start];
     }
@@ -217,7 +219,7 @@ UIBackgroundTaskIdentifier taskId;
 #pragma mark - SFSafariViewControllerDelegate
 
 - (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
-    [self terminateWithError:ERROR_CANCELLED dismissing:NO animated:NO];
+    [self terminateWithError:ERROR_CANCELLED2 dismissing:NO animated:NO];
 }
 
 - (void)safariViewController:(SFSafariViewController *)controller didCompleteInitialLoad:(BOOL)didLoadSuccessfully {
