@@ -49,15 +49,21 @@ RCT_EXPORT_METHOD(showUrl:(NSString *)urlString
                   usingEphemeralSession:(BOOL)ephemeralSession
                   closeOnLoad:(BOOL)closeOnLoad
                   callback:(RCTResponseSenderBlock)callback) {
-    if (@available(iOS 11.0, *)) {
-        self.sessionCallback = callback;
-        self.closeOnLoad = closeOnLoad;
-        [self presentAuthenticationSession:[NSURL URLWithString:urlString] usingEphemeralSession:ephemeralSession];
-    } else {
-        [self presentSafariWithURL:[NSURL URLWithString:urlString]];
-        self.sessionCallback = callback;
-        self.closeOnLoad = closeOnLoad;
-    }
+    // if (@available(iOS 11.0, *)) {
+    //     self.sessionCallback = callback;
+    //     self.closeOnLoad = closeOnLoad;
+    //     [self presentAuthenticationSession:[NSURL URLWithString:urlString] usingEphemeralSession:ephemeralSession];
+    // } else {
+    //     [self presentSafariWithURL:[NSURL URLWithString:urlString]];
+    //     self.sessionCallback = callback;
+    //     self.closeOnLoad = closeOnLoad;
+    // }
+    // since inApp view was blocking user while signing out
+    // so we need to redirect azure login to safari webview
+    // to handle login and logout
+    [self presentSafariWithURL:[NSURL URLWithString:urlString]];
+    self.sessionCallback = callback;
+    self.closeOnLoad = closeOnLoad;
 }
 
 RCT_EXPORT_METHOD(oauthParameters:(RCTResponseSenderBlock)callback) {

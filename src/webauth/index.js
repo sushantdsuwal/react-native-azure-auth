@@ -129,6 +129,7 @@ export default class WebAuth {
     );
 
     // const logoutUrl = client.logoutUrl()
+    // link: to logout all login session cache by azure auth.
     const logoutUrl = 'https://login.microsoftonline.com/common/oauth2/logout';
     return agent.openWeb(logoutUrl, parsedOptions.closeOnLoad);
   }
